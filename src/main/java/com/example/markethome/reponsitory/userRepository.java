@@ -15,6 +15,7 @@ public interface userRepository extends JpaRepository<User,Integer> {
     boolean existsByEmail(String email);
     boolean existsByPhone(String phone);
     User findByEmail(String email);
+    User findUserById(int id);
     @Query(value = "select * from users where branch_id=?", nativeQuery = true)
     List<User> findByBranch(Integer branch);
 

@@ -15,11 +15,10 @@ public class ServiceDTO {
     private long price;
     private int category;
     private String description;
-    private String img;
-
+    private String img;;
     private  int status;
     private String[] imgList;
-
+    private int userid;
 
 }
 

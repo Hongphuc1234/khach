@@ -10,14 +10,17 @@ import java.util.List;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<Service, Integer> {
-    @Query("SELECT b FROM Service b WHERE b.status = 1")
+    @Query("SELECT b FROM Service b WHERE b.status = 0")
     List<Service> findAllWithNotRemove();
-
+    @Query("SELECT b FROM Service b WHERE b.status = 1 order by b.id desc")
+    List<Service> findAllL();
     @Query("SELECT b FROM Service b WHERE b.status != 3")
     List<Service> findAllWithNotRemoveAdmin();
 
-    @Query(value = "select * from Service b where category_id = ? ", nativeQuery = true)
+    @Query(value = "select * from Service b where category_id = ? and b.status = 0", nativeQuery = true)
     List<Service> findBycateo(Integer id);
+    @Query(value = "select * from Service b where user_id = ? ", nativeQuery = true)
+    List<Service> findByUserid(Integer id);
     @Query("SELECT b FROM Service b WHERE b.status != 3 AND b.name LIKE %:serviceName%")
     List<Service> findAllWithNotRemoveByName(@Param("serviceName") String serviceName);
 
