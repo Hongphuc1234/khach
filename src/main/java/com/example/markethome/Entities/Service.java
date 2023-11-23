@@ -46,10 +46,15 @@ public class Service {
     @JsonIgnore
     @JoinColumn(name ="category_id")
     private Category category;
+
+    @ManyToOne()
+    @JsonIgnore
+    @JoinColumn(name ="user_id")
+    private User user;
     public Service() {
     }
 
-    public Service(Integer id, String name, long price, String img, String description, int status, Collection<ImgDetail> imgDetails, Collection<Comment> comments, Category category) {
+    public Service(Integer id, String name, long price, String img, String description, int status, Collection<ImgDetail> imgDetails, Collection<Comment> comments, Category category, User user) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -59,6 +64,7 @@ public class Service {
         this.imgDetails = imgDetails;
         this.comments = comments;
         this.category = category;
+        this.user = user;
     }
 
     public Integer getId() {
@@ -133,4 +139,11 @@ public class Service {
         this.category = category;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
