@@ -4,9 +4,11 @@ import com.example.markethome.DTO.ServiceDTO;
 import com.example.markethome.Entities.Category;
 import com.example.markethome.Entities.ImgDetail;
 import com.example.markethome.Entities.Service;
+import com.example.markethome.Entities.User;
 import com.example.markethome.reponsitory.CategoryRepository;
 import com.example.markethome.reponsitory.ImgDetailReponsitory;
 import com.example.markethome.reponsitory.ServiceRepository;
+import com.example.markethome.reponsitory.userRepository;
 import com.example.markethome.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ public class ServiceApi {
 
     @Autowired
     private ServiceService serviceService;
+    @Autowired
+    private userRepository userRepository;
 
 
     @Autowired
@@ -36,7 +40,6 @@ public class ServiceApi {
     CategoryRepository categoryRepository;
 
     @PostMapping
-    @RolesAllowed("ROLE_ADMIN")
     public ResponseEntity<?> create(@RequestBody @Valid ServiceDTO service) {
         String pathfile = serviceService.saveImg(service.getImg());
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -44,7 +47,9 @@ public class ServiceApi {
                 .path(pathfile)
                 .toUriString();
         Category ca = categoryRepository.getById(service.getCategory());
+        User u = userRepository.findUserById(service.getUserid());
         Service newService = new Service();
+        newService.setUser(u);
         newService.setCategory(ca);
         newService.setName(service.getName());
         newService.setPrice(service.getPrice());
@@ -122,6 +127,7 @@ public class ServiceApi {
             }
             serviceService.updateImgDetail(service.getImgList(), newService);
             newService.setName(service.getName());
+            newService.setUser(userRepository.findUserById(service.getUserid()));
             newService.setPrice(service.getPrice());
             newService.setDescription(service.getDescription());
             newService.setStatus(service.getStatus());
@@ -163,6 +169,11 @@ public class ServiceApi {
     @GetMapping("/cateo/{da}")
     public ResponseEntity<?> listcateo(@PathVariable int da){
         List<Service> list = serviceRepo.findBycateo(da);
+        return ResponseEntity.ok().body(list);
+    }
+    @GetMapping("/listpost/{userid}")
+    public ResponseEntity<?> listPost(@PathVariable int userid){
+        List<Service> list = serviceRepo.findByUserid(userid);
         return ResponseEntity.ok().body(list);
     }
 }

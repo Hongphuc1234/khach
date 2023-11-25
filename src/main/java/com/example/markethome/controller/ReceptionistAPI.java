@@ -81,4 +81,18 @@ public class ReceptionistAPI {
       List<Booking> list = bookingRepository.findAcept();
         return ResponseEntity.ok().body(list);
     }
+
+    @GetMapping("/ser")
+    public ResponseEntity<?> getSerForReceptionist() {
+        List<Service> list = serviceRepository.findAllL();
+        return ResponseEntity.ok().body(list);
+    }
+    @RolesAllowed("ROLE_ADMIN")
+    @GetMapping("/acceptSer/{id}")
+    public ResponseEntity<?> acceptSer(@PathVariable int id) {
+        Service s = serviceRepository.findServiceById(id);
+        s.setStatus(0);
+        serviceRepository.save(s);
+        return ResponseEntity.ok().body(s.getId());
+    }
 }
